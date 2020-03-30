@@ -19,12 +19,13 @@ const maze = (
 const go = direction =>
   ({
     top: point =>
-      point.getRow() + 1 < mazeData.rows ? point.index - mazeData.rows : null,
+      point.getRow() - 1 > 1 ? point.index - mazeData.rows : null,
     bottom: point =>
-      point.getRow() - 1 > 1 ? point.index + mazeData.rows : null,
+      point.getRow() + 1 <= mazeData.rows ? point.index + mazeData.rows : null,
     right: point =>
-      point.getColumn() + 1 < mazeData.columns ? point.index + 1 : null,
-    left: point => (point.getColumn() - 1 > 1 ? point.index + 1 : null),
+      point.getColumn() + 1 <= mazeData.columns ? point.index + 1 : null,
+    left: point =>
+      point.getColumn() - 1 > 1 ? point.index - 1 : null,
   }[direction])
 
 const whereToGo = walls => {
@@ -54,11 +55,11 @@ const MainPage = () => {
       })
       return edgeData;
     })
-    console.log(edges)
     edges.forEach(edge => {
       if (edge) graph.addEdge(edge.from, edge.to, edge.weight)
     })
-    const path = graph.shortestPath(1, 3)
+    const path = graph.shortestPath(1, 4)
+    global.getPath = (from, to) => graph.shortestPath(from, to)
     console.log({ graph, path, maze: mazeData })
   }, [])
 

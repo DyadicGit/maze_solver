@@ -19,7 +19,7 @@ export const mazeData = {
     new Point(1,  1, ['top', '', '', 'left']),
     new Point(2,  2, ['top', '', 'bottom', '']),
     new Point(3,  3, ['top', '', 'bottom', '']),
-    new Point(4,  4, ['', '', 'bottom', '']),
+    new Point(4,  4, ['', 'right', 'bottom', '']),
     new Point(5,  5, ['top', 'right', '', 'left']),
     new Point(6,  6, ['', 'right', '', 'left']),
     new Point(7,  7, ['top', '', '', 'left']),
