@@ -28,6 +28,9 @@ class WeightedGraph {
         this.adjacencyList[vertex1].push({ node:vertex2, weight });
         this.adjacencyList[vertex2].push({ node:vertex1, weight });
     }
+    addOneWayEdge(vertex1,vertex2, weight){
+      this.adjacencyList[vertex1].push({ node:vertex2, weight });
+    }
     shortestPath(start, finish){
         const priorityQ = new PriorityQueue();
         const distances = {};

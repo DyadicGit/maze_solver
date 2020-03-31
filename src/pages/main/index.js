@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { WeightedGraph } from "../../lib/graph"
 import { mazeData } from "./maze-data"
 import mazeSample from "../../assets/maze-sample.png"
@@ -40,34 +40,53 @@ const whereToGo = walls => {
   return validKeys.filter(path => paths[path])
 }
 
-const MainPage = () => {
-  useEffect(() => {
-    const graph = new WeightedGraph()
-    mazeData.points.flatMap(point => graph.addVertex(point.name))
-    const edges = mazeData.points.flatMap(point => {
-      const freePaths = whereToGo(point.walls)
-      const edgeData = freePaths.map(path => {
-        const goToIndex = go(path)(point) - 1
-        const nextPoint = mazeData.points[goToIndex]
-        return nextPoint
-          ? { from: point.name, to: nextPoint.name, weight: point.weight }
-          : undefined
-      })
-      return edgeData;
+const FromToInput = (sendCoordinates) => {
+  const [from, setFrom] = useState(1)
+  const [to, setTo] = useState(1)
+  return (
+    <div>
+      <input type="number" onChange={(e) => setFrom(e.target.value)} name="from" title="from"/>
+      <input type="number" onChange={(e) => setTo(e.target.value)} name="to" title="to"/>
+      <button type="button" onClick={() => sendCoordinates(from, to)}>Go</button>
+    </div>
+  )
+}
+const populateGraph = () => {
+  const graph = new WeightedGraph()
+  mazeData.points.flatMap(point => graph.addVertex(point.name))
+  const edges = mazeData.points.flatMap(point => {
+    const freePaths = whereToGo(point.walls)
+    const edgeData = freePaths.map(path => {
+      const goToIndex = go(path)(point) - 1
+      const nextPoint = mazeData.points[goToIndex]
+      return nextPoint
+        ? { from: point.name, to: nextPoint.name, weight: point.weight }
+        : undefined
     })
-    edges.forEach(edge => {
-      if (edge) graph.addEdge(edge.from, edge.to, edge.weight)
-    })
-    const path = graph.shortestPath(1, 4)
-    global.getPath = (from, to) => graph.shortestPath(from, to)
-    console.log({ graph, path, maze: mazeData })
-  }, [])
+    return edgeData;
+  })
+  edges.forEach(edge => {
+    if (edge) graph.addEdge(edge.from, edge.to, edge.weight)
+  })
+  global.graph = graph;
+  console.log({ graph, maze: mazeData })
+}
 
+const MainPage = () => {
+  useEffect(populateGraph, [])
+
+  const [printPath, setPrint] = useState()
+  const getPath = (from, to) => {
+    const path = global.graph.shortestPath(from, to)
+    setPrint(path)
+  }
   return (
     <main className="maze-page">
       <h1>Maze solver</h1>
       <img alt="maze sample" src={mazeSample} />
       {maze}
+      {FromToInput(getPath)}
+      <pre>{printPath}</pre>
     </main>
   )
 }
