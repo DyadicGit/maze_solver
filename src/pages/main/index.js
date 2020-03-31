@@ -3,6 +3,7 @@ import { WeightedGraph } from "../../lib/graph"
 import { mazeData } from "./maze-data"
 import mazeSample from "../../assets/maze-sample.png"
 import "./main.scss"
+import { Maze } from "./maze-generator";
 
 const maze = (
   <div className="maze">
@@ -71,7 +72,10 @@ const populateGraph = () => {
   global.graph = graph;
   console.log({ graph, maze: mazeData })
 }
-
+const test = () => {
+  const newMaze2 = new Maze(5,5)
+  console.log({newMaze2})
+}
 const MainPage = () => {
   useEffect(populateGraph, [])
 
@@ -87,6 +91,7 @@ const MainPage = () => {
       {maze}
       {FromToInput(getPath)}
       <pre>{printPath}</pre>
+      <button type="button" title="test" onClick={() => test()}>generate maze</button>
     </main>
   )
 }
