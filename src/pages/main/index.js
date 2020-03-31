@@ -97,6 +97,8 @@ const MainPage = () => {
   const generateMaze = () => {
     const generator = new MazeGenerator(5, 5)
     generator.initialize()
+    const dfs = generator.dfs()
+    console.log({dfs})
   }
   return (
     <main className="maze-page">
