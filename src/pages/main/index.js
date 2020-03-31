@@ -3,7 +3,7 @@ import { WeightedGraph } from "../../lib/graph"
 import { mazeData } from "./maze-data"
 import mazeSample from "../../assets/maze-sample.png"
 import "./main.scss"
-import { Maze } from "./maze-generator";
+import { MazeGenerator } from "./generator"
 
 const maze = (
   <div className="maze">
@@ -41,14 +41,26 @@ const whereToGo = walls => {
   return validKeys.filter(path => paths[path])
 }
 
-const FromToInput = (sendCoordinates) => {
+const FromToInput = sendCoordinates => {
   const [from, setFrom] = useState(1)
   const [to, setTo] = useState(1)
   return (
     <div>
-      <input type="number" onChange={(e) => setFrom(e.target.value)} name="from" title="from"/>
-      <input type="number" onChange={(e) => setTo(e.target.value)} name="to" title="to"/>
-      <button type="button" onClick={() => sendCoordinates(from, to)}>Go</button>
+      <input
+        type="number"
+        onChange={e => setFrom(e.target.value)}
+        name="from"
+        title="from"
+      />
+      <input
+        type="number"
+        onChange={e => setTo(e.target.value)}
+        name="to"
+        title="to"
+      />
+      <button type="button" onClick={() => sendCoordinates(from, to)}>
+        Go
+      </button>
     </div>
   )
 }
@@ -64,21 +76,14 @@ const populateGraph = () => {
         ? { from: point.name, to: nextPoint.name, weight: point.weight }
         : undefined
     })
-    return edgeData;
+    return edgeData
   })
   edges.forEach(edge => {
     if (edge) graph.addEdge(edge.from, edge.to, edge.weight)
   })
-  global.graph = graph;
+  global.graph = graph
   console.log({ graph, maze: mazeData })
 }
-const compassToWall = {
-  n: 'top',
-  s: 'bottom',
-  w: 'left',
-  e: 'right'
-}
-const getClassName = (column) => Object.getOwnPropertyNames(column).map(dir => !!column[dir] && compassToWall[dir]).filter(s => s).join(' ')
 
 const MainPage = () => {
   useEffect(populateGraph, [])
@@ -88,14 +93,10 @@ const MainPage = () => {
     const path = global.graph.shortestPath(from, to)
     setPrint(path)
   }
-  const [generatedMaze, setGenMaze] = useState();
+  const [generatedMaze, setGenMaze] = useState()
   const generateMaze = () => {
-    const maze = new Maze(5,5)
-    console.log(maze.map)
-    const htmlMaze = maze.map.map((row, i) => row.map((column, j) => <div key={(i+1)*(j+1)} className={getClassName(column)}>{(i+1)*(j+1)}</div>))
-    setGenMaze((
-      <div className="maze">{htmlMaze}</div>
-    ))
+    const generator = new MazeGenerator(5, 5)
+    generator.initialize()
   }
   return (
     <main className="maze-page">
@@ -106,7 +107,9 @@ const MainPage = () => {
       {FromToInput(getPath)}
       <pre>{printPath}</pre>
       <h2>Maze generator</h2>
-      <button type="button" title="test" onClick={() => generateMaze()}>generate maze</button>
+      <button type="button" title="test" onClick={() => generateMaze()}>
+        generate maze
+      </button>
       {generatedMaze}
     </main>
   )
