@@ -14,5 +14,7 @@
   .right { border-right: solid $thickness $color }
   .bottom { border-bottom: solid $thickness $color }
   .left { border-left: solid $thickness $color }
+
+  &.size10 { grid-template: repeat(10, 1fr) / repeat(10, 1fr) }
 }
 

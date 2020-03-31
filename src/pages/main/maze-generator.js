@@ -1,8 +1,8 @@
 function Maze(w, h) {
-  const defaultSize = 20;
+  const defaultSize = 10;
   this.w = (isNaN(w) || w < 5 || w > 999) ? defaultSize : w
   this.h = (isNaN(h) || h < 5 || h > 999) ? defaultSize : h
-  this.map = new Array(h).fill( new Array(w).fill({ n: 0, s: 0, e: 0, w: 0, v: 0 }) )
+  this.map = new Array(h).fill(null).map(() => new Array(w).fill(null).map(() => ({ n: 0, s: 0, e: 0, w: 0, v: 0 })) )
   this.dirs = ["n", "s", "e", "w"]
   this.modDir = {
     n: { y: -1, x: 0, o: "s" },
@@ -13,8 +13,33 @@ function Maze(w, h) {
 
   this.build(0, 0)
 }
+Maze.prototype.build = function(x = 0, y = 0) {
+  this.explore(x, y)
+  this.toGrid()
+}
+Maze.prototype.explore = function(ex, ey) {
+  this.dirs = sortRand(this.dirs)
+
+  for (const dir of this.dirs) {
+    const nx = ex + this.modDir[dir].x;
+    const ny = ey + this.modDir[dir].y;
+
+    if (
+      nx >= 0 && nx < this.w &&
+      ny >= 0 && ny < this.h
+      && this.map[ny][nx].v === 0
+    ) {
+      this.map[ey][ex][dir] = 1
+      this.map[ey][ex].v = 1
+      this.map[ny][nx][this.modDir[dir].o] = 1
+
+      this.explore(nx, ny)
+    }
+  }
+}
+
 Maze.prototype.toGrid = function() {
-  const grid = new Array(this.h * 2 + 1).fill( new Array(this.h * 2 + 1).fill(0) );
+  const grid = new Array(this.h * 2 + 1).fill(null).map(() => new Array(this.h * 2 + 1).fill(0) );
   for (let y = 0; y < this.h; ++y) {
     const py = y * 2 + 1;
 
@@ -36,30 +61,6 @@ Maze.prototype.toGrid = function() {
   this.gridW = grid.length
   this.gridH = grid[0].length
 }
-Maze.prototype.build = function(x = 0, y = 0) {
-  this.explore(x, y)
-  this.toGrid()
-}
-Maze.prototype.explore = function(ex, ey) {
-  this.dirs = sortRandOld(this.dirs)
-
-  for (const dir of this.dirs) {
-    const nx = ex + this.modDir[dir].x;
-    const ny = ey + this.modDir[dir].y;
-
-    if (
-      nx >= 0 && nx < this.w &&
-      ny >= 0 && ny < this.h
-      && this.map[ny][nx].v === 0
-    ) {
-      this.map[ey][ex][dir] = 1
-      this.map[ey][ex].v = 1
-      this.map[ny][nx][this.modDir[dir].o] = 1
-
-      this.explore(nx, ny)
-    }
-  }
-}
 
 function sortRand(inputArray) {
   const array = [...inputArray]
@@ -69,15 +70,5 @@ function sortRand(inputArray) {
   }
   return array
 }
-function sortRandOld(a) {
-  const out = [];
-  const l = a.length;
 
-  for(let x in a) {
-    do { var p = Math.floor(Math.random() * (l * 1000)) % l; } while(typeof out[p]!='undefined');
-    out[p] = a[x];
-  }
-
-  return out;
-}
 export { Maze }

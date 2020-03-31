@@ -4,8 +4,6 @@ import { mazeData } from "./maze-data"
 import mazeSample from "../../assets/maze-sample.png"
 import "./main.scss"
 import { Maze } from "./maze-generator";
-import { Maze2 } from "./maze-generator2";
-import { MazeOriginal } from "./maze-generator-orig";
 
 const maze = (
   <div className="maze">
@@ -74,13 +72,14 @@ const populateGraph = () => {
   global.graph = graph;
   console.log({ graph, maze: mazeData })
 }
-const test = () => {
-  const newMaze1 = new Maze(10,10)
-  const newMaze2 = new Maze2(10,10)
-  const newMaze3 = new MazeOriginal(10,10)
-
-  console.log({newMaze1, newMaze2, newMaze3})
+const compassToWall = {
+  n: 'top',
+  s: 'bottom',
+  w: 'left',
+  e: 'right'
 }
+const getClassName = (column) => Object.getOwnPropertyNames(column).map(dir => !!column[dir] && compassToWall[dir]).filter(s => s).join(' ')
+
 const MainPage = () => {
   useEffect(populateGraph, [])
 
@@ -89,14 +88,26 @@ const MainPage = () => {
     const path = global.graph.shortestPath(from, to)
     setPrint(path)
   }
+  const [generatedMaze, setGenMaze] = useState();
+  const generateMaze = () => {
+    const maze = new Maze(5,5)
+    console.log(maze.map)
+    const htmlMaze = maze.map.map((row, i) => row.map((column, j) => <div key={(i+1)*(j+1)} className={getClassName(column)}>{(i+1)*(j+1)}</div>))
+    setGenMaze((
+      <div className="maze">{htmlMaze}</div>
+    ))
+  }
   return (
     <main className="maze-page">
       <h1>Maze solver</h1>
+      <h2>Example</h2>
       <img alt="maze sample" src={mazeSample} />
       {maze}
       {FromToInput(getPath)}
       <pre>{printPath}</pre>
-      <button type="button" title="test" onClick={() => test()}>generate maze</button>
+      <h2>Maze generator</h2>
+      <button type="button" title="test" onClick={() => generateMaze()}>generate maze</button>
+      {generatedMaze}
     </main>
   )
 }
