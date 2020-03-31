@@ -4,6 +4,8 @@ import { mazeData } from "./maze-data"
 import mazeSample from "../../assets/maze-sample.png"
 import "./main.scss"
 import { Maze } from "./maze-generator";
+import { Maze2 } from "./maze-generator2";
+import { MazeOriginal } from "./maze-generator-orig";
 
 const maze = (
   <div className="maze">
@@ -73,8 +75,11 @@ const populateGraph = () => {
   console.log({ graph, maze: mazeData })
 }
 const test = () => {
-  const newMaze2 = new Maze(5,5)
-  console.log({newMaze2})
+  const newMaze1 = new Maze(10,10)
+  const newMaze2 = new Maze2(10,10)
+  const newMaze3 = new MazeOriginal(10,10)
+
+  console.log({newMaze1, newMaze2, newMaze3})
 }
 const MainPage = () => {
   useEffect(populateGraph, [])

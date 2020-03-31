@@ -15,7 +15,6 @@ function Maze(w, h) {
 }
 Maze.prototype.toGrid = function() {
   const grid = new Array(this.h * 2 + 1).fill( new Array(this.h * 2 + 1).fill(0) );
-
   for (let y = 0; y < this.h; ++y) {
     const py = y * 2 + 1;
 
@@ -42,7 +41,7 @@ Maze.prototype.build = function(x = 0, y = 0) {
   this.toGrid()
 }
 Maze.prototype.explore = function(ex, ey) {
-  this.dirs = sortRand(this.dirs)
+  this.dirs = sortRandOld(this.dirs)
 
   for (const dir of this.dirs) {
     const nx = ex + this.modDir[dir].x;
@@ -65,10 +64,20 @@ Maze.prototype.explore = function(ex, ey) {
 function sortRand(inputArray) {
   const array = [...inputArray]
   for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const j = Math.floor(Math.random() * (array.length * 1000)) % array.length;
     [array[i], array[j]] = [array[j], array[i]];
   }
   return array
 }
+function sortRandOld(a) {
+  const out = [];
+  const l = a.length;
 
+  for(let x in a) {
+    do { var p = Math.floor(Math.random() * (l * 1000)) % l; } while(typeof out[p]!='undefined');
+    out[p] = a[x];
+  }
+
+  return out;
+}
 export { Maze }
