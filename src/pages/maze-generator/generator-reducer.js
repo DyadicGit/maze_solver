@@ -1,4 +1,4 @@
-import { useReducer } from 'react'
+import { useEffect, useReducer } from 'react'
 import { generateGrid } from './generator'
 import { TYPES as GTYPES, useGraphReducer } from './graph-reducer'
 
@@ -13,6 +13,12 @@ export const useMazeGeneratorReducer = (width = 5, height = 5) => {
   }
   const initializer = initState => initState
   const [state, dispatch] = useReducer(reducer, initialState, initializer)
+
+  useEffect(() => {
+    dispatch({ type: 'UPDATE_GRAPH', payload: graphState })
+    dispatch({ type: 'dfs' })
+  }, [graphState])
+
   return [state, dispatch]
 }
 export const TYPES = {
@@ -57,7 +63,10 @@ function reducer(state, action) {
         }
         return result
       }
-      return {...state, dfs: dfs()}
+
+      return { ...state, dfs: Object.getOwnPropertyNames(state.graph.state).length ? dfs() : 'not yet' }
+    case 'UPDATE_GRAPH':
+      return { ...state, graph: { ...state.graph, state: action.payload } }
     default:
       throw new Error()
   }
