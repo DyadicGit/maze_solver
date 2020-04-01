@@ -1,5 +1,5 @@
-const getColumn = index => index % mazeData.columns || mazeData.columns
-const getRow = index => Math.ceil(index / mazeData.rows)
+export const getColumn = index => index % mazeData.columns || mazeData.columns
+export const getRow = index => Math.ceil(index / mazeData.rows)
 
 export class Point {
   constructor(index, name, walls, weight = 1) {

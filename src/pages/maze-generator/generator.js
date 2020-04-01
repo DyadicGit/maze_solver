@@ -61,9 +61,9 @@ export const dfs = (start, adjacencyList) => {
     result.push(currentVertex);
 
     adjacencyList[currentVertex].forEach(neighbor => {
-      if(!visited[neighbor.node]){
-        visited[neighbor.node] = true;
-        stack.push(neighbor.node)
+      if(!visited[neighbor.index]){
+        visited[neighbor.index] = true;
+        stack.push(neighbor.index)
       }
     });
   }

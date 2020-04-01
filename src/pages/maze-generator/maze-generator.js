@@ -71,4 +71,4 @@ function sortRand(inputArray) {
   return array
 }
 
-export { Maze }
+export { Maze, sortRand }

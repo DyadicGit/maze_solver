@@ -21,10 +21,18 @@ function reducer(state, action) {
       const { vertex1, vertex2, weight = 1 } = action.payload
       return {
         ...state,
-        [vertex1]: [...state[vertex1], { node: vertex2, weight }],
-        [vertex2]: [...state[vertex2], { node: vertex1, weight }]
+        [vertex1.index]: [...state[vertex1.index], new Node(vertex2.index, vertex2, weight)],
+        [vertex2.index]: [...state[vertex2.index], new Node(vertex1.index, vertex1, weight)]
       }
     default:
       throw new Error()
+  }
+}
+
+export class Node {
+  constructor(index, point, weight) {
+    this.index = index;
+    this.point = point;
+    this.weight = weight;
   }
 }
