@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from "react"
-import { WeightedGraph } from "../../lib/graph"
-import { mazeData } from "./maze-data"
-import mazeSample from "../../assets/maze-sample.png"
-import "./main.scss"
-import { MazeGenerator } from "./generator"
+import React, { useEffect, useState } from 'react'
+import { WeightedGraph } from '../../lib/graph'
+import { mazeData } from './maze-data'
+import mazeSample from '../../assets/maze-sample.png'
+import '../maze-styles.scss'
 
 const maze = (
   <div className="maze">
     {mazeData.points.map((point, i) => {
       return (
-        <div className={point.walls.join(" ")} key={i + 1}>
+        <div className={point.walls.join(' ')} key={i + 1}>
           {point.name}
         </div>
       )
@@ -19,14 +18,10 @@ const maze = (
 
 const go = direction =>
   ({
-    top: point =>
-      point.getRow() - 1 > 1 ? point.index - mazeData.rows : null,
-    bottom: point =>
-      point.getRow() + 1 <= mazeData.rows ? point.index + mazeData.rows : null,
-    right: point =>
-      point.getColumn() + 1 <= mazeData.columns ? point.index + 1 : null,
-    left: point =>
-      point.getColumn() - 1 > 1 ? point.index - 1 : null,
+    top: point => (point.getRow() - 1 > 1 ? point.index - mazeData.rows : null),
+    bottom: point => (point.getRow() + 1 <= mazeData.rows ? point.index + mazeData.rows : null),
+    right: point => (point.getColumn() + 1 <= mazeData.columns ? point.index + 1 : null),
+    left: point => (point.getColumn() - 1 > 1 ? point.index - 1 : null),
   }[direction])
 
 const whereToGo = walls => {
@@ -37,7 +32,7 @@ const whereToGo = walls => {
     left: true,
   }
   walls.forEach(wall => (paths[wall] = false))
-  const validKeys = ["top", "bottom", "right", "left"]
+  const validKeys = ['top', 'bottom', 'right', 'left']
   return validKeys.filter(path => paths[path])
 }
 
@@ -46,18 +41,8 @@ const FromToInput = sendCoordinates => {
   const [to, setTo] = useState(1)
   return (
     <div>
-      <input
-        type="number"
-        onChange={e => setFrom(e.target.value)}
-        name="from"
-        title="from"
-      />
-      <input
-        type="number"
-        onChange={e => setTo(e.target.value)}
-        name="to"
-        title="to"
-      />
+      <input type="number" onChange={e => setFrom(e.target.value)} name="from" title="from" />
+      <input type="number" onChange={e => setTo(e.target.value)} name="to" title="to" />
       <button type="button" onClick={() => sendCoordinates(from, to)}>
         Go
       </button>
@@ -72,9 +57,7 @@ const populateGraph = () => {
     const edgeData = freePaths.map(path => {
       const goToIndex = go(path)(point) - 1
       const nextPoint = mazeData.points[goToIndex]
-      return nextPoint
-        ? { from: point.name, to: nextPoint.name, weight: point.weight }
-        : undefined
+      return nextPoint ? { from: point.name, to: nextPoint.name, weight: point.weight } : undefined
     })
     return edgeData
   })
@@ -85,7 +68,7 @@ const populateGraph = () => {
   console.log({ graph, maze: mazeData })
 }
 
-const MainPage = () => {
+const MazeSolverExamplePage = () => {
   useEffect(populateGraph, [])
 
   const [printPath, setPrint] = useState()
@@ -93,13 +76,7 @@ const MainPage = () => {
     const path = global.graph.shortestPath(from, to)
     setPrint(path)
   }
-  const [generatedMaze, setGenMaze] = useState()
-  const generateMaze = () => {
-    const generator = new MazeGenerator(5, 5)
-    generator.initialize()
-    const dfs = generator.dfs()
-    console.log({dfs})
-  }
+
   return (
     <main className="maze-page">
       <h1>Maze solver</h1>
@@ -108,13 +85,8 @@ const MainPage = () => {
       {maze}
       {FromToInput(getPath)}
       <pre>{printPath}</pre>
-      <h2>Maze generator</h2>
-      <button type="button" title="test" onClick={() => generateMaze()}>
-        generate maze
-      </button>
-      {generatedMaze}
     </main>
   )
 }
 
-export default MainPage
+export default MazeSolverExamplePage

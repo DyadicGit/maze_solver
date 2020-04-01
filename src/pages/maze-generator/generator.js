@@ -1,4 +1,4 @@
-import { Point } from "./maze-data"
+import { Point } from "../maze-solver-example/maze-data"
 import { WeightedGraph } from "../../lib/graph";
 
 const generateGrid = (width, height) => {
