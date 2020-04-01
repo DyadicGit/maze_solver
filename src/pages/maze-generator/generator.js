@@ -44,25 +44,28 @@ export class MazeGenerator {
       })
     })
   }
-  dfs(start = this.grid[0][0].index){
-    const stack = [start];
-    const result = [];
-    const visited = {};
-    let currentVertex;
-
-    visited[start] = true;
-    while(stack.length){
-      currentVertex = stack.pop();
-      result.push(currentVertex);
-
-      this.graph.adjacencyList[currentVertex].forEach(neighbor => {
-        if(!visited[neighbor.node]){
-          visited[neighbor.node] = true;
-          stack.push(neighbor.node)
-        }
-      });
-    }
-    return result;
+  dfs() {
+    return dfs(this.grid[0][0].index, this.graph.adjacencyList)
   }
 }
 
+export const dfs = (start, adjacencyList) => {
+  const stack = [start];
+  const result = [];
+  const visited = {};
+  let currentVertex;
+
+  visited[start] = true;
+  while(stack.length){
+    currentVertex = stack.pop();
+    result.push(currentVertex);
+
+    adjacencyList[currentVertex].forEach(neighbor => {
+      if(!visited[neighbor.node]){
+        visited[neighbor.node] = true;
+        stack.push(neighbor.node)
+      }
+    });
+  }
+  return result;
+}

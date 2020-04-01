@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from 'react'
-import { generateGrid } from './generator'
+import { dfs, generateGrid } from './generator'
 import { TYPES as GTYPES, useGraphReducer } from './graph-reducer'
 
 export const useMazeGeneratorReducer = (width = 5, height = 5) => {
@@ -43,28 +43,7 @@ function reducer(state, action) {
 
       return state
     case TYPES.DFS:
-      function dfs(start = state.grid[0][0].index) {
-        const stack = [start]
-        const result = []
-        const visited = {}
-        let currentVertex
-
-        visited[start] = true
-        while (stack.length) {
-          currentVertex = stack.pop()
-          result.push(currentVertex)
-
-          state.graph.state[currentVertex].forEach(neighbor => {
-            if (!visited[neighbor.node]) {
-              visited[neighbor.node] = true
-              stack.push(neighbor.node)
-            }
-          })
-        }
-        return result
-      }
-
-      return { ...state, dfs: Object.getOwnPropertyNames(state.graph.state).length ? dfs() : 'not yet' }
+      return { ...state, dfs: Object.getOwnPropertyNames(state.graph.state).length ? dfs(state.grid[0][0].index, state.graph.state) : 'not yet' }
     case 'UPDATE_GRAPH':
       return { ...state, graph: { ...state.graph, state: action.payload } }
     default:
