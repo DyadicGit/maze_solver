@@ -18,8 +18,8 @@ class PriorityQueueSimple {
 
 
 class WeightedGraph {
-    constructor() {
-        this.adjacencyList = {};
+    constructor(adjacencyList = {}) {
+        this.adjacencyList = adjacencyList;
     }
     addVertex(vertex){
         if(!this.adjacencyList[vertex]) this.adjacencyList[vertex] = [];

@@ -1,7 +1,7 @@
 import { Point } from "../maze-solver-example/maze-data"
 import { WeightedGraph } from "../../lib/graph";
 
-const generateGrid = (width, height) => {
+export const generateGrid = (width, height) => {
   return new Array(height)
     .fill(null)
     .map((_, i) =>
