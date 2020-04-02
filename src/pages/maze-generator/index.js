@@ -14,19 +14,15 @@ const MazeGeneratorPage = () => {
     const generator = new MazeGenerator(10, 10)
     generator.initialize()
     generator.dfs()
-    setGenerator(generator)
-    setMaze(generateMaze(generator.grid, 10))
-  }
-  const removeWalls = () => {
     generator.removeWalls()
     setGenerator(generator)
     setMaze(generateMaze(generator.grid, 10))
   }
+
   return (
     <main className="maze-page">
       <h2>Maze generator</h2>
-      <button type="button" title="generate Native" onClick={generateData}>generate data</button>
-      <button type="button" title="remove walls" onClick={removeWalls}>remove walls</button>
+      <button type="button" title="generate Native" onClick={generateData}>generate</button>
       <button type="button" title="log" onClick={() => console.log(generator)}>LOG</button>
       {maze}
     </main>

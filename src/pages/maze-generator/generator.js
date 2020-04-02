@@ -1,6 +1,4 @@
-import { Cell, ExtendedGraph } from '../../lib/graph-extended'
-import { sortRand } from '../../lib/backup/maze-generator'
-import { getColumn, getRow } from "../maze-solver-example/maze-data";
+import { Cell, getColumn, getRow, WeightedGraph } from '../../lib/graph'
 
 export const generateGrid = (width, height) => {
   return new Array(height).fill(null).map((_, i) =>
@@ -13,7 +11,7 @@ export const generateGrid = (width, height) => {
 
 export class MazeGenerator {
   constructor(width = 5, height = 5) {
-    this.graph = new ExtendedGraph()
+    this.graph = new WeightedGraph()
     this.grid = generateGrid(width, height)
     this.width = width
     this.height = height
@@ -67,7 +65,7 @@ export class MazeGenerator {
       }
       return path
     }
-    this.dfsNew = dfsGenerator(this.grid[0][0])
+    this.dfsRandom = dfsGenerator(this.grid[0][0])
   }
 }
 const indexByWall = {
@@ -109,4 +107,13 @@ export const dfs = (start, adjacencyList) => {
     })
   }
   return result
+}
+
+function sortRand(inputArray) {
+  const array = [...inputArray]
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (array.length * 1000)) % array.length;
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array
 }
