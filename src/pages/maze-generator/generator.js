@@ -20,11 +20,15 @@ export class MazeGenerator {
     this.grid.flat().forEach(vertex => this.graph.addVertex(vertex))
     this.grid.forEach((row, rIndex) => {
       row.forEach((column, cIndex) => {
-        const nextColumn = cIndex + 1 < this.width && this.grid[rIndex][cIndex + 1],
-          nextRow = rIndex + 1 < this.height && this.grid[rIndex + 1][cIndex]
+        const rightColumn = cIndex + 1 < this.width && this.grid[rIndex][cIndex + 1],
+          leftColumn = cIndex - 1 > 1 && this.grid[rIndex][cIndex - 1],
+          bottomRow = rIndex + 1 < this.height && this.grid[rIndex + 1][cIndex],
+          topRow = rIndex - 1 > 1 && this.grid[rIndex - 1][cIndex]
 
-        if (nextColumn) this.graph.addEdge(column, nextColumn, 1)
-        if (nextRow) this.graph.addEdge(column, nextRow, 1)
+        if (rightColumn) this.graph.addEdge(column, rightColumn, 1)
+        if (leftColumn) this.graph.addEdge(column, leftColumn, 1)
+        if (bottomRow) this.graph.addEdge(column, bottomRow, 1)
+        if (topRow) this.graph.addEdge(column, topRow, 1)
       })
     })
   }

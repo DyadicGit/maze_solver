@@ -5,18 +5,19 @@ import { MazeGenerator } from "./generator";
 const MazeGeneratorPage = () => {
   const [generator, setGenerator] = useState();
   const [maze, setMaze] = useState();
+  const [size, setSize] = useState(10);
   const generateMaze = (grid, size) => (
     <div className={`maze size${size}`}>
       {grid.flatMap(row => row.map(point => <div key={point.index} className={point.walls.join(' ')}>{point.name}</div>))}
     </div>
   )
   const generateData = () => {
-    const generator = new MazeGenerator(10, 10)
+    const generator = new MazeGenerator(size, size)
     generator.initialize()
     generator.dfs()
     generator.removeWalls()
     setGenerator(generator)
-    setMaze(generateMaze(generator.grid, 10))
+    setMaze(generateMaze(generator.grid, size))
   }
 
   return (
