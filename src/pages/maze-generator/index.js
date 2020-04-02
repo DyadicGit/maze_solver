@@ -1,22 +1,33 @@
-import React from 'react'
+import React, { useState } from 'react'
 import '../maze-styles.scss'
-import { TYPES, useMazeGeneratorReducer } from './generator-reducer'
+import { MazeGenerator } from "./generator";
 
 const MazeGeneratorPage = () => {
-  const [state, dispatch] = useMazeGeneratorReducer(5, 5)
-  const maze = (
-    <div className="maze">
-      {state.grid.flatMap(row => row.map(point => <div key={point.index} className={point.walls.join(' ')}>{point.name}</div>))}
+  const [generator, setGenerator] = useState();
+  const [maze, setMaze] = useState();
+  const generateMaze = (grid, size) => (
+    <div className={`maze size${size}`}>
+      {grid.flatMap(row => row.map(point => <div key={point.index} className={point.walls.join(' ')}>{point.name}</div>))}
     </div>
   )
-
+  const generateData = () => {
+    const generator = new MazeGenerator(10, 10)
+    generator.initialize()
+    generator.dfs()
+    setGenerator(generator)
+    setMaze(generateMaze(generator.grid, 10))
+  }
+  const removeWalls = () => {
+    generator.removeWalls()
+    setGenerator(generator)
+    setMaze(generateMaze(generator.grid, 10))
+  }
   return (
     <main className="maze-page">
       <h2>Maze generator</h2>
-      <button type="button" title="initialize" onClick={() => dispatch({ type: TYPES.INITIALIZE_GRAPH })}>initialize</button>
-      <button type="button" title="remove_walls" onClick={() => dispatch({ type: TYPES.REMOVE_WALLS })}>remove walls</button>
-      <button type="button" title="log" onClick={() => console.log({state})}>LOG</button>
-      <p>DFS: {Array.isArray(state.dfs) ? state.dfs.join(' -> ') : state.dfs}</p>
+      <button type="button" title="generate Native" onClick={generateData}>generate data</button>
+      <button type="button" title="remove walls" onClick={removeWalls}>remove walls</button>
+      <button type="button" title="log" onClick={() => console.log(generator)}>LOG</button>
       {maze}
     </main>
   )

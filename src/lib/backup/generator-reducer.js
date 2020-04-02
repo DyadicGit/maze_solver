@@ -1,8 +1,8 @@
 import { useEffect, useReducer } from 'react'
-import { dfs, generateGrid } from './generator'
+import { dfs, generateGrid, oppositeWall, whereAreYouFrom } from '../../pages/maze-generator/generator'
 import { TYPES as GTYPES, useGraphReducer } from './graph-reducer'
 import { sortRand } from './maze-generator'
-import { getColumn, getRow } from '../maze-solver-example/maze-data'
+import { getColumn, getRow } from '../../pages/maze-solver-example/maze-data'
 
 export const useMazeGeneratorReducer = (width = 5, height = 5) => {
   const [graphState, graphDispatch] = useGraphReducer()
@@ -64,10 +64,11 @@ function reducer(state, action) {
           path.push(currentVertex)
 
           const neighbors = adjacencyList[currentVertex]
+          // eslint-disable-next-line no-loop-func
           sortRand(neighbors).forEach(neighbor => {
             if (!visited[neighbor.index]) {
               visited[neighbor.index] = true
-              const wallToRemove = whereAreYouFrom(currentVertex, neighbor.index)
+              const wallToRemove = whereAreYouFrom(currentVertex.in, neighbor.index)
               const newWalls = neighbor.point.walls.filter(s => s !== wallToRemove)
               const oldWalls = state.grid[getRow(currentVertex) -1][getColumn(currentVertex) - 1].walls.filter(s => s !== oppositeWall[wallToRemove])
               newPoints[currentVertex] = new ModifiedPoint(currentVertex, oldWalls)
@@ -85,20 +86,7 @@ function reducer(state, action) {
       throw new Error()
   }
 }
-const whereAreYouFrom = (previousIdx, currentIdx) => {
-  const pRow = getRow(previousIdx), cRow = getRow(currentIdx),
-    pColumn = getColumn(previousIdx), cColumn = getColumn(currentIdx)
-  if (pColumn < cColumn) return 'left'
-  if (pColumn > cColumn) return 'right'
-  if (pRow < cRow) return 'top'
-  if (pRow > cRow) return 'bottom'
-}
-const oppositeWall = {
-  left: 'right',
-  right: 'left',
-  top: 'bottom',
-  bottom: 'top'
-}
+
 class ModifiedPoint {
   constructor(index, walls) {
     this.index = index

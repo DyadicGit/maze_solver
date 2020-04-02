@@ -29,7 +29,7 @@ function reducer(state, action) {
   }
 }
 
-export class Node {
+class Node {
   constructor(index, point, weight) {
     this.index = index;
     this.point = point;
